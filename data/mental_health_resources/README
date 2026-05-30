@@ -1,0 +1,12 @@
+# Mental Health Resources
+
+This folder contains the source materials used by the Retrieval-Augmented Generation (RAG) system. These resources will be processed into searchable text chunks and vector embeddings to support chatbot responses.
+
+Examples of resources may include:
+
+- World Health Organization (WHO) mental health publications
+- Cognitive Behavioral Therapy (CBT) educational materials
+- Publicly available mental wellness guides
+- Research articles and reference documents approved for project use
+
+All resources included in this folder should be publicly available, properly attributed, and used solely for educational and informational purposes.
