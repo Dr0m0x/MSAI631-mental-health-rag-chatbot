@@ -1,0 +1,10 @@
+gradio>=4.0
+sentence-transformers>=2.2
+faiss-cpu>=1.7
+pypdf>=4.0
+numpy
+google-generativeai>=0.7
+groq>=0.9
+# Offline fallback only (large download). Uncomment if you have no API key:
+# transformers>=4.40
+# torch
