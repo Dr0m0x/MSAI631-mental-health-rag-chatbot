@@ -11,6 +11,7 @@ embeds each chunk, and saves:
 import os
 import glob
 import pickle
+from pathlib import Path
 
 import numpy as np
 import faiss
@@ -18,26 +19,30 @@ from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
 
 EMBED_MODEL = "all-MiniLM-L6-v2"
-DOCS_FOLDER = "docs"
+BASE_DIR = Path(__file__).resolve().parent
+DOCS_FOLDER = BASE_DIR / "docs"
 CHUNK_SIZE = 180      # words per chunk
 CHUNK_OVERLAP = 40    # words shared between neighbouring chunks
 
 
 def load_texts(folder=DOCS_FOLDER):
     texts = []
-    for path in glob.glob(os.path.join(folder, "*.pdf")):
+    folder = Path(folder)
+    for path in glob.glob(os.path.join(str(folder), "*.pdf")):
         reader = PdfReader(path)
         for page in reader.pages:
             t = page.extract_text() or ""
             if t.strip():
                 texts.append(t)
-    for path in glob.glob(os.path.join(folder, "*.txt")):
+    for path in glob.glob(os.path.join(str(folder), "*.txt")):
         with open(path, encoding="utf-8") as f:
             texts.append(f.read())
     return texts
 
 
 def chunk(text, size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
+    if overlap >= size:
+        raise ValueError("CHUNK_OVERLAP must be smaller than CHUNK_SIZE.")
     words = text.split()
     out = []
     step = size - overlap
@@ -49,10 +54,11 @@ def chunk(text, size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
 
 
 def main():
+    DOCS_FOLDER.mkdir(parents=True, exist_ok=True)
     docs = load_texts()
     if not docs:
         raise SystemExit(
-            "No documents found in docs/. Add at least one .pdf or .txt file."
+            f"No documents found in {DOCS_FOLDER}. Add at least one .pdf or .txt file."
         )
 
     chunks = []
@@ -67,10 +73,12 @@ def main():
     index = faiss.IndexFlatIP(emb.shape[1])  # cosine similarity (normalized vectors)
     index.add(emb)
 
-    faiss.write_index(index, "index.faiss")
-    with open("chunks.pkl", "wb") as f:
+    index_path = BASE_DIR / "index.faiss"
+    chunks_path = BASE_DIR / "chunks.pkl"
+    faiss.write_index(index, str(index_path))
+    with open(chunks_path, "wb") as f:
         pickle.dump(chunks, f)
-    print("Saved index.faiss and chunks.pkl")
+    print(f"Saved {index_path} and {chunks_path}")
 
 
 if __name__ == "__main__":

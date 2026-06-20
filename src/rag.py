@@ -12,6 +12,7 @@ based on which API key is available:
 
 import os
 import pickle
+from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()  # read the .env file into the environment
 import numpy as np
@@ -20,8 +21,9 @@ from sentence_transformers import SentenceTransformer
 
 # ---------- configuration ----------
 EMBED_MODEL = "all-MiniLM-L6-v2"
-INDEX_PATH = "index.faiss"
-CHUNKS_PATH = "chunks.pkl"
+BASE_DIR = Path(__file__).resolve().parent
+INDEX_PATH = BASE_DIR / "index.faiss"
+CHUNKS_PATH = BASE_DIR / "chunks.pkl"
 TOP_K = 4
 
 DISCLAIMER = (
@@ -55,8 +57,16 @@ def load():
     if _embedder is None:
         _embedder = SentenceTransformer(EMBED_MODEL)
     if _index is None:
-        _index = faiss.read_index(INDEX_PATH)
+        if not INDEX_PATH.exists():
+            raise FileNotFoundError(
+                f"Missing FAISS index: {INDEX_PATH}. Run ingest.py to build it."
+            )
+        _index = faiss.read_index(str(INDEX_PATH))
     if _chunks is None:
+        if not CHUNKS_PATH.exists():
+            raise FileNotFoundError(
+                f"Missing chunk store: {CHUNKS_PATH}. Run ingest.py to build it."
+            )
         with open(CHUNKS_PATH, "rb") as f:
             _chunks = pickle.load(f)
     return _embedder, _index, _chunks
@@ -80,9 +90,13 @@ def build_prompt(question, passages):
 def _gen_gemini(prompt):
     import google.generativeai as genai
     genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-   # model = genai.GenerativeModel("gemini-2.5-flash")
+    # model = genai.GenerativeModel("gemini-2.5-flash")
     model = genai.GenerativeModel("gemini-3-flash-preview")
-    return model.generate_content(prompt).text.strip()
+    resp = model.generate_content(prompt)
+    text = getattr(resp, "text", None)
+    if text:
+        return text.strip()
+    raise RuntimeError("Gemini returned an empty response.")
 
 
 def _gen_groq(prompt):
@@ -112,12 +126,27 @@ def generate(question, k=TOP_K):
     passages = retrieve(question, k)
     prompt = build_prompt(question, passages)
 
+    answer = None
+    errors = []
+
     if os.environ.get("GEMINI_API_KEY"):
-        answer = _gen_gemini(prompt)
-    elif os.environ.get("GROQ_API_KEY"):
-        answer = _gen_groq(prompt)
-    else:
-        answer = _gen_flan(prompt)
+        try:
+            answer = _gen_gemini(prompt)
+        except Exception as exc:
+            errors.append(f"gemini failed: {exc}")
+
+    if answer is None and os.environ.get("GROQ_API_KEY"):
+        try:
+            answer = _gen_groq(prompt)
+        except Exception as exc:
+            errors.append(f"groq failed: {exc}")
+
+    if answer is None:
+        try:
+            answer = _gen_flan(prompt)
+        except Exception as exc:
+            errors.append(f"flan failed: {exc}")
+            raise RuntimeError("; ".join(errors)) from exc
 
     return answer + DISCLAIMER
 

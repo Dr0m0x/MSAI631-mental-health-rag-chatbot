@@ -50,8 +50,7 @@ This creates `index.faiss` and `chunks.pkl`.
 
 ## Run the app
 ```bash
-# load the key from .env into your shell, then start the app
-export $(grep -v '^#' .env | xargs)   # Windows PowerShell: see note below
+# start the app (rag.py auto-loads .env via python-dotenv)
 python app.py
 ```
 Open the printed local URL (usually http://127.0.0.1:7860).
@@ -69,6 +68,15 @@ Open the printed local URL (usually http://127.0.0.1:7860).
 The bot is scoped to general psychoeducation, answers only from retrieved
 sources, declines out-of-scope questions, and signposts professional and crisis
 support rather than attempting to handle emergencies.
+
+## Smoke tests
+```bash
+python -m unittest discover -s tests -v
+```
+
+## Hardening notes
+- `app.py`, `rag.py`, and `ingest.py` now resolve files relative to their own directory, so commands can be run from any working directory.
+- If hosted providers fail at runtime, generation now degrades to fallback providers instead of failing immediately.
 
 ## AI disclosure
 Portions of this project were developed with AI assistance and reviewed before use.
