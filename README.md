@@ -29,7 +29,7 @@ This project aims to develop a Retrieval-Augmented Generation (RAG) Mental Healt
 - Hugging Face Spaces
 - GitHub
 
-  ## Source Code Components
+ ## Source Code Components
 The project source code consists of the following primary files:
 
 •	app.py – Gradio-based user interface and application entry point.
@@ -46,7 +46,6 @@ The project source code consists of the following primary files:
 
 •	chunks.pkl – Serialized document chunks used during retrieval.
 
-<img width="468" height="346" alt="image" src="https://github.com/user-attachments/assets/4e6ee598-67b6-431c-8055-783ab8884ed9" />
 
 
 ## Sources and Reused Components
