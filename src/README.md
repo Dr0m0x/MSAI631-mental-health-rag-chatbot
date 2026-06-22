@@ -114,3 +114,5 @@ support rather than attempting to handle emergencies.
 
 ## AI disclosure
 Portions of this project were developed with AI assistance and reviewed before use.
+
+## Public deployment available at: https://huggingface.co/spaces/ggebreselassie29144/mental-health-chatbot
