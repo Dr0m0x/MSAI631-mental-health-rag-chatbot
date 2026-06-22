@@ -29,6 +29,18 @@ This project aims to develop a Retrieval-Augmented Generation (RAG) Mental Healt
 - Hugging Face Spaces
 - GitHub
 
+  ## Source Code Components
+The project source code consists of the following primary files:
+•	app.py – Gradio-based user interface and application entry point.
+•	rag.py – Retrieval-Augmented Generation workflow and response generation logic.
+•	ingest.py – Document ingestion, chunking, embedding creation, and FAISS index generation.
+•	requirements.txt – Project dependencies.
+•	docs/ – Mental health source documents used to build the knowledge base.
+•	index.faiss – Vector database used for similarity search.
+•	chunks.pkl – Serialized document chunks used during retrieval.
+<img width="468" height="346" alt="image" src="https://github.com/user-attachments/assets/4e6ee598-67b6-431c-8055-783ab8884ed9" />
+
+
 ## Sources and Reused Components
 Gradio framework
 
