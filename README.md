@@ -31,27 +31,42 @@ This project aims to develop a Retrieval-Augmented Generation (RAG) Mental Healt
 
 ## Sources and Reused Components
 Gradio framework
+
 FAISS vector database
+
 Sentence Transformers
+
 Groq API / Llama model
+
 Hugging Face Spaces deployment
+
 WHO and CBT source materials
 
 ## Challenges Encountered
+
 Team GitHub access and permissions
+
 Dependency management and package compatibility
+
 Retrieval quality tuning
+
 Deployment configuration
+
 Knowledge base preparation and chunking
 
 ## Known Limitations
 Educational use only
+
 Not intended for crisis intervention
+
 Limited by source document coverage
+
 Response quality depends on retrieval accuracy
 
 ## Execution Status
+
 The application executes successfully locally and on Hugging Face Spaces.
+
 Public deployment available at: [link]
 
 ## Status
