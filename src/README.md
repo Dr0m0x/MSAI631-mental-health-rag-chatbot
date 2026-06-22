@@ -65,7 +65,7 @@ Open the printed local URL (usually http://127.0.0.1:7860).
 3. In **Settings → Variables and secrets**, add `GEMINI_API_KEY`.
 4. The Space builds automatically and gives you a public demo URL.
 
-~Sources and Reused Components
+## ~Sources and Reused Components
 
 Gradio framework
 
@@ -79,7 +79,7 @@ Hugging Face Spaces deployment
 
 WHO and CBT source materials
 
-~Challenges Encountered
+## ~Challenges Encountered
 
 Team GitHub access and permissions
 
@@ -87,7 +87,7 @@ Dependency management and package compatibility
 
 Retrieval quality tuning
 
-~Deployment configuration
+## ~Deployment configuration
 
 Knowledge base preparation and chunking
 
@@ -101,7 +101,7 @@ Limited by source document coverage
 
 Response quality depends on retrieval accuracy
 
-~Execution Status
+## ~Execution Status
 
 The application executes successfully locally and on Hugging Face Spaces.
 
