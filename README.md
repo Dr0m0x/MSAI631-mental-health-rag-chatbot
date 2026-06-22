@@ -75,3 +75,5 @@ Project Proposal Phase
 Summer 2026
 University of the Cumberlands
 MSAI-631: Artificial Intelligence for Human-Computer Interaction
+
+## Public deployment available at: https://huggingface.co/spaces/ggebreselassie29144/mental-health-chatbot 
